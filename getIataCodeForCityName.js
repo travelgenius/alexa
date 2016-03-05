@@ -31,4 +31,4 @@ function getIataCodeForCityNameCallback(res) {
     return res;
 }
 
-getIataCodeForCityName('Berlin', getIataCodeForCityNameCallback);
+//getIataCodeForCityName('Berlin', getIataCodeForCityNameCallback);
