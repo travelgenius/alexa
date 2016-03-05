@@ -25,10 +25,6 @@ function getIataCodeForCityName(city, callback) {
 
 }
 
-function getIataCodeForCityNameCallback(res) {
-    //console.log(res);
-
-    return res;
-}
-
 //getIataCodeForCityName('Berlin', getIataCodeForCityNameCallback);
+
+module.exports = getIataCodeForCityName
