@@ -48,3 +48,5 @@ function minPriceCallback(res) {
 //findflightfromIataXtoIataY('BER', 'NAP', '2016-03-29', minPriceCallback);
 
 //findflightfromIataXtoIataY('BER', 'NAP', '2016-03-29', '2016-04-01', minPriceCallback);
+
+module.exports = findflightfromIataXtoIataY
