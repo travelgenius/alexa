@@ -4,13 +4,16 @@
   "description": "",
   "main": "lambda.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "setup": "node-lambda setup",
+    "run": "node-lambda run",
+    "deploy": "node-lambda deploy"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-awslambda": "^0.3.0",
+    "node-lambda": "^0.7.1",
     "request": "^2.69.0",
     "superagent": "^1.8.0-beta.2"
   }
