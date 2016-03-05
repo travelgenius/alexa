@@ -1,0 +1,34 @@
+{
+ "session": {
+   "sessionId": "SessionId.a5257070-c3f5-430e-b370-d5c7612619cf",
+   "application": {
+     "applicationId": "amzn1.echo-sdk-ams.app.b63adaab-617d-4730-9012-eae8c8a904af"
+   },
+   "user": {
+     "userId": "amzn1.echo-sdk-account.AFDJIHN5RAR3BOTFFSTQA66M5MQ76GA2NMPABQLSXYBZFWJ7TZUMC"
+   },
+   "new": true
+ },
+ "request": {
+   "type": "IntentRequest",
+   "requestId": "EdwRequestId.89265765-3acd-41c6-b330-2f8ec1d86ec1",
+   "timestamp": "2016-03-05T17:12:15Z",
+   "intent": {
+     "name": "SearchEventsByType",
+     "slots": {
+       "EventDate": {
+         "name": "EventDate",
+         "value": "2016-SU"
+       },
+       "EventType": {
+         "name": "EventType",
+         "value": "techno"
+       },
+       "EventLocation": {
+         "name": "EventLocation",
+         "value": "Barcelona"
+       }
+     }
+   }
+ }
+}
