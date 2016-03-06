@@ -96,6 +96,8 @@ function onIntent(intentRequest, session, callback) {
     endSession(intent, session, callback);
   } else if ("FindCheapestFlight" === intentName) {
     findCheapestFlight(intent, session, callback);
+  } else if ("InviteFriends" === intentName) {
+    inviteFriends(intent, session, callback);
   } else {
     throw "Invalid intent";
   }
@@ -118,7 +120,7 @@ function getWelcomeResponse(callback) {
   var sessionAttributes = {};
   var cardTitle = "Welcome";
   var speechOutput = //"Welcome to Travel Genius. " +
-    "Please tell me where you would like to go.";
+    "How can I help you?";
   // + " If you didn't decide on a specific event yet, ask me which events are available at a certain time.";
   // If the user either does not reply to the welcome message or says something that is not
   // understood, they will be prompted again with this text.
@@ -280,7 +282,7 @@ function selectEvent(intent, session, callback) {
     events.forEach(function(event) {
       if (name === event.title.toLowerCase()) {
         sessionAttributes.event = event
-        speechOutput = event.title + ' starts ' + moment().calendar(event.date) + ' in ' + event.city + ', ' + event.country;
+        speechOutput = event.title + ' starts ' + moment().calendar(event.startdate) + ' in ' + event.city + ', ' + event.country;
         // speechOutput += "If you would like to arrange transportation to the event, just ask me."
       }
     });
@@ -329,6 +331,46 @@ function findCheapestFlight(intent, session, callback) {
 
 
   getIataCodeForCityName(event.city, findFlight)
+  console.log("=============================== event ========================")
+  console.log(event)
+  console.log("city:", event.city)
+  function findFlight (Iatacodes) {
+    var IATA = Iatacodes[0].iata;
+    console.log("IATA: ", IATA)
+    findflightfromIataXtoIataY('BER', IATA, event.startdate, '', processFlightInfo);
+  }
+  function processFlightInfo (flights) {
+    console.log("== processFlightInfo ==")
+    var cheapest = flights[0];
+    console.log(cheapest)
+    speechOutput = "I found a few flights. The cheapest one costs " + cheapest.minprice + " euros.     "
+    speechOutput += "I also found some accomodation options. Do you want me to send you an email with all the details ready to book?"
+    sessionAttributes.flight = cheapest;
+    return callback(sessionAttributes,
+      buildSpeechletResponse(intent.name, speechOutput, repromptText, shouldEndSession));
+  }
+}
+
+function inviteFriends(intent, session, callback) {
+  var repromptText = null;
+  var sessionAttributes = session.attributes || {};
+  var shouldEndSession = false;
+  var speechOutput = "";
+
+  var friendName = intent.slots.EventName.value;
+
+
+
+  if (!event) {
+    speechOutput = "You need to tell me where you would like to go first by asking information about an event."
+    return callback(sessionAttributes,
+      buildSpeechletResponse(intent.name, speechOutput, repromptText, shouldEndSession));
+  }
+
+
+  getIataCodeForCityName(event.city, findFlight)
+  console.log("=============================== event ========================")
+  console.log(event)
   console.log("city:", event.city)
   function findFlight (Iatacodes) {
     var IATA = Iatacodes[0].iata;
@@ -340,7 +382,7 @@ function findCheapestFlight(intent, session, callback) {
 
     var cheapest = flights[0];
     console.log(cheapest)
-    speechOutput = "I found a few flights. The cheapest one costs " + cheapest.minprice + " euros."
+    speechOutput = "I found a few flights. The cheapest one costs " + cheapest.minprice + " euros.     "
     speechOutput += "I also found some accomodation options. Do you want me to send you an email with all the details ready to book?"
     return callback(sessionAttributes,
       buildSpeechletResponse(intent.name, speechOutput, repromptText, shouldEndSession));
