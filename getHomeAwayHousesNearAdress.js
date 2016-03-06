@@ -33,6 +33,17 @@ function getHomeAwayHousesNearAdress(address, distance, callback) {
                     if (!error && response.statusCode == 200) {
                         var info = JSON.parse(body);
                         //console.log(util.inspect(info, false, null));
+                        function compare(a, b) {
+                            if (a.reviewaverage > b.reviewaverage)
+                                return -1;
+                            else if (a.reviewaverage < b.reviewaverage)
+                                return 1;
+                            else
+                                return 0;
+                        }
+
+                        info.sort(compare);
+
                         callback(info);
                     }
                 }
@@ -49,21 +60,6 @@ function getHomeAwayHousesNearAdress(address, distance, callback) {
     request(google_options, google_callback);
 }
 
-function reviewAverageCallback(res) {
-    function compare(a, b) {
-        if (a.reviewaverage > b.reviewaverage)
-            return -1;
-        else if (a.reviewaverage < b.reviewaverage)
-            return 1;
-        else
-            return 0;
-    }
-    if (res == {})
-        res.sort(compare);
-
-    console.log(res);
-
-    return res;
-}
-
 //getHomeAwayHousesNearAdress('Glynde, UK', 5, reviewAverageCallback);
+
+module.exports = getHomeAwayHousesNearAdress

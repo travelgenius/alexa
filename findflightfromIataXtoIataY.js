@@ -21,6 +21,18 @@ function findflightfromIataXtoIataY(iataX, iataY, outbound_partial_date, inbound
         if (!error && response.statusCode == 200) {
             var info = JSON.parse(body);
             //console.log(util.inspect(info, false, null));
+
+            function compare(a, b) {
+                if (a.minprice < b.minprice)
+                    return -1;
+                else if (a.minprice > b.minprice)
+                    return 1;
+                else
+                    return 0;
+            }
+
+            info.sort(compare);
+
             callback(info);
         }
     }
@@ -28,25 +40,7 @@ function findflightfromIataXtoIataY(iataX, iataY, outbound_partial_date, inbound
 
 }
 
-function minPriceCallback(res) {
-    function compare(a, b) {
-        if (a.minprice < b.minprice)
-            return -1;
-        else if (a.minprice > b.minprice)
-            return 1;
-        else
-            return 0;
-    }
-
-    res.sort(compare);
-
-    //console.log(res);
-
-    return res;
-}
-
 //findflightfromIataXtoIataY('BER', 'NAP', '2016-03-29', minPriceCallback);
-
 //findflightfromIataXtoIataY('BER', 'NAP', '2016-03-29', '2016-04-01', minPriceCallback);
 
 module.exports = findflightfromIataXtoIataY
