@@ -221,7 +221,7 @@ function getEventsByType(intent, session, callback) {
     // buildSpeechletResponse(intent.name, speechOutput, repromptText, shouldEndSession));
 }
 
-function getHouse(intent, session, callback) {
+function getHouses(intent, session, callback) {
     var favoriteColor;
     var repromptText = null;
     var sessionAttributes = {};
