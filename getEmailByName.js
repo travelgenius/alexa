@@ -34,7 +34,7 @@ function getEmailByName(name, callback) {
 
 function sendEmailTo(email, yourname, tgevent, tgaccommondations, tgflight, tgskyscanner) {
     // create reusable transporter object using the default SMTP transport
-    var transporter = nodemailer.createTransport('smtps://travelgenius@technotravel.com:g=y97RM>aaa@smtp.gmail.com');
+    var transporter = nodemailer.createTransport('see slack');
 
     MAIL = swig.renderFile('mailToMe.html', {
         name: yourname,
@@ -63,8 +63,8 @@ function sendEmailTo(email, yourname, tgevent, tgaccommondations, tgflight, tgsk
     //console.log(MAIL);
 }
 
-tgevent1 = { 'title': "Long Festival", 'startdate': '2016-03-28', 'enddate': '2016-04-01', 'city': 'Berlin', 'address': 'Hauptbahnhof', 'country': 'Germany', 'image': 'https://placehold.it/580x300' };
-tgevent2 = { 'title': "OneDay Festival", 'startdate': '2016-03-28', 'city': 'Berlin', 'address': 'Hauptbahnhof', 'country': 'Germany', 'image': 'https://placehold.it/580x300' };
+tgevent1 = { 'title': "Long Festival", 'startdate': '2016-03-28', 'enddate': '2016-04-01', 'city': 'Berlin', 'address': 'Hauptbahnhof', 'country': 'Germany', 'image': 'https://farm1.staticflickr.com/24/96601739_444032d6fa_z_d.jpg' };
+tgevent2 = { 'title': "OneDay Festival", 'startdate': '2016-03-28', 'city': 'Berlin', 'address': 'Hauptbahnhof', 'country': 'Germany', 'image': 'https://farm1.staticflickr.com/24/96601739_444032d6fa_z_d.jpg' };
 
 accommondations = [{
     headline: 'Facilities to include: Fishing, Hot Tub, Sauna, fitness suite and games room',
@@ -118,7 +118,7 @@ flight = {
 
 skyscanner = { 'from': 'berl', 'to': 'napl', 'startdate': '160329', 'enddate': '160401' };
 
-sendEmailTo('christoph.jurkowski@gmail.com', 'Christoph', tgevent2, accommondations, flight, skyscanner);
+
 
 //getEmailByName('Christoph', printCallback);
 
