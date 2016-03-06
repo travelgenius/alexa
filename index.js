@@ -1,5 +1,7 @@
 var superagent = require('superagent');
 var moment = require('moment');
+var findflightfromIataXtoIataY = require('./findflightfromIataXtoIataY.js')
+var getIataCodeForCityName = require('./getIataCodeForCityName.js')
 /**
  * This sample demonstrates a simple skill built with the Amazon Alexa Skills Kit.
  * The Intent Schema, Custom Slots, and Sample Utterances for this skill, as well as
@@ -92,6 +94,8 @@ function onIntent(intentRequest, session, callback) {
     selectEvent(intent, session, callback);
   } else if ("NotInterested" === intentName) {
     endSession(intent, session, callback);
+  } else if ("FindCheapestFlight" === intentName) {
+    findCheapestFlight(intent, session, callback);
   } else {
     throw "Invalid intent";
   }
@@ -111,7 +115,7 @@ function onSessionEnded(sessionEndedRequest, session) {
 
 function getWelcomeResponse(callback) {
   // If we wanted to initialize the session to have some attributes we could add those here.
-  var sessionAttributes = session.attributes || {};
+  var sessionAttributes = {};
   var cardTitle = "Welcome";
   var speechOutput = //"Welcome to Travel Genius. " +
     "Please tell me where you would like to go.";
@@ -208,6 +212,10 @@ function getEventsByType(intent, session, callback) {
       }
 
       if (eventLocation) {
+        console.log('======================================')
+        console.log("eventLocation: ", eventLocation)
+        console.log('======================================')
+
         eventLocation = eventLocation.toLowerCase();
         sessionAttributes.eventLocation = eventLocation;
         events = events.filter(function(event) {
@@ -218,16 +226,16 @@ function getEventsByType(intent, session, callback) {
       // limit to 5
       events = events.slice(0, 5)
 
-      var eventNames = events.map(function(event) {
-        return event.title; });
-
-
+      var eventNames = events.map(function(event) { return event.title; });
 
 
 
       if (events.length === 0) {
-        speechOutput = "I didn't find any events matching that criteria. Please make a new search.";
         repromptText = null;
+        speechOutput = "I didn't find any " + eventType + " events"
+        if (eventLocation) {
+          speechOutput += ' in ' + eventLocation;
+        }
       } else {
         speechOutput = "I have found " + events.length + " " + eventType + " events ";
         if (eventLocation) {
@@ -270,8 +278,10 @@ function selectEvent(intent, session, callback) {
   var findEventByName = function(name, events) {
     name = name.toLowerCase();
     events.forEach(function(event) {
-      if (name === event.name.toLowerCase()) {
-        speechOutput = event.name + ' starts on ' + moment().calendar(event.date) + ' at ' + event.location;
+      if (name === event.title.toLowerCase()) {
+        sessionAttributes.event = event
+        speechOutput = event.title + ' starts ' + moment().calendar(event.date) + ' in ' + event.city + ', ' + event.country;
+        // speechOutput += "If you would like to arrange transportation to the event, just ask me."
       }
     });
 
@@ -301,7 +311,41 @@ function selectEvent(intent, session, callback) {
         findEventByName(eventName, events)
       }
     });
+}
 
+function findCheapestFlight(intent, session, callback) {
+  var repromptText = null;
+  var sessionAttributes = session.attributes || {};
+  var shouldEndSession = false;
+  var speechOutput = "";
+
+  var event = sessionAttributes.event
+
+  if (!event) {
+    speechOutput = "You need to tell me where you would like to go first by asking information about an event."
+    return callback(sessionAttributes,
+      buildSpeechletResponse(intent.name, speechOutput, repromptText, shouldEndSession));
+  }
+
+
+  getIataCodeForCityName(event.city, findFlight)
+  console.log("city:", event.city)
+  function findFlight (Iatacodes) {
+    var IATA = Iatacodes[0].iata;
+    console.log("IATA: ", IATA)
+    findflightfromIataXtoIataY('BER', IATA, event.startdate, '', sendEmail);
+  }
+  function sendEmail (flights) {
+    console.log("SENDEMAIL: ")
+
+    var cheapest = flights[0];
+    console.log(cheapest)
+    speechOutput = "I found a few flights. The cheapest one costs " + cheapest.minprice + " euros."
+    speechOutput += "I also found some accomodation options. Do you want me to send you an email with all the details ready to book?"
+    return callback(sessionAttributes,
+      buildSpeechletResponse(intent.name, speechOutput, repromptText, shouldEndSession));
+
+  }
 }
 
 // --------------- Helpers that build all of the responses -----------------------

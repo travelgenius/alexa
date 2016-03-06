@@ -15,7 +15,7 @@ function findflightfromIataXtoIataY(iataX, iataY, outbound_partial_date, inbound
             'Authorization-Token': XAPIX_API_KEY
         }
     };
-    //console.log(xapix_options.url);
+    console.log(xapix_options.url);
 
     function xapix_callback(error, response, body) {
         if (!error && response.statusCode == 200) {
